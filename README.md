@@ -64,7 +64,6 @@ docker-compose up -d
 This will:
 - Build the Docker image
 - Start the Dreamcatcher service on port `8080`
-- Start a MongoDB database for future features
 
 ### Step 4: Configure UniFi Alarm Manager
 
@@ -121,7 +120,6 @@ Dreamcatcher runs two parallel services:
 ## 🐳 Docker Compose Services
 
 - **backend**: The Dreamcatcher FastAPI application (port 8080)
-- **database**: MongoDB for future data persistence
 
 ---
 
@@ -151,10 +149,6 @@ dreamcatcher/
 |----------|-------------|----------|
 | `TELEGRAM_BOT_TOKEN` | Your Telegram bot token from BotFather | ✅ Yes |
 
-### MongoDB (Optional)
-
-The MongoDB service is included for future features. Current functionality doesn't require it, but it's ready for data persistence if needed.
-
 ---
 
 ## 🛠️ Development
@@ -179,7 +173,7 @@ When an alarm triggers, UDM sends a POST request to `/webhook` with JSON data:
 }
 ```
 
-Dreamcatcher extracts the message and forwards it to your Telegram chat.
+**Note**: The actual webhook payload from UniFi is much more complex and contains additional metadata, timestamps, device information, and other technical details. However, **Dreamcatcher focuses on simplicity and robustness** by extracting only the essential information (the message itself) and forwarding it to Telegram. This approach prevents information overload and keeps notifications clean and actionable for the end user.
 
 ---
 
