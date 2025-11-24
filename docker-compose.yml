@@ -1,0 +1,8 @@
+services:
+  dreamcatcher:
+    build: .
+    image: dreamcatcher:latest
+    container_name: dreamcatcher
+    ports:
+      - "8080:80"
+    restart: unless-stopped
