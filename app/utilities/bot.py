@@ -1,10 +1,8 @@
-import os
-from utilities.logger import log
 from telegram import ForceReply, Update, Bot
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+import os
 
-
-# await self.send_message(self.chat_id, "Das ist ein Test")
+from utilities.logger import log
 
 class TelegramBot():
 
@@ -29,19 +27,8 @@ class TelegramBot():
         await update.message.reply_text("the monitoring has been stopped!")
         self.active = False
 
-    # async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    #     """Send a message when the command /help is issued."""
-    #     await update.message.reply_text("Help!")
-
-
-    # async def echo(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    #     """Echo the user message."""
-    #     await update.message.reply_text(update.message.text)
-
-
     async def send_message(self, chat_id: int, text: str):
         await self.bot.send_message(chat_id=chat_id, text=text)
-
 
     async def initialize(self):
 
@@ -52,9 +39,6 @@ class TelegramBot():
 
         application.add_handler(CommandHandler("start", self.start))
         application.add_handler(CommandHandler("stop", self.stop))
-
-        # application.add_handler(CommandHandler("help", self.help_command))
-        # application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.echo))
 
         await application.initialize()
         await application.start()

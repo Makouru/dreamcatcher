@@ -1,25 +1,10 @@
 services:
-  backend:
+  dreamcatcher:
     build: .
     image: dreamcatcher:latest
-    container_name: dreamcatcher-backend
+    container_name: dreamcatcher
     ports:
       - "8080:80"
     env_file:
       - .env
     restart: unless-stopped
-    depends_on:
-      - database
-
-  database:
-    image: mongo:latest
-    container_name: dreamcatcher-database
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    volumes:
-      - dreamcatcher-db-data:/data/db
-
-volumes:
-  dreamcatcher-db-data:
