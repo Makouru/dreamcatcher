@@ -49,9 +49,12 @@ Create a `.env` file in the project root directory:
 
 ```bash
 TELEGRAM_BOT_TOKEN=your_bot_token_here
+STORE_WEBHOOKS_TO_DATABASE=false
 ```
 
 Replace `your_bot_token_here` with the token you received from BotFather.
+
+**Note**: `STORE_WEBHOOKS_TO_DATABASE` is optional and defaults to `false`. Set it to `true` only for development purposes or if you're curious about the raw data your Dream Machine router sends. When enabled, all webhook payloads will be stored in the MongoDB database.
 
 ### Step 3: Start the Service
 
@@ -64,6 +67,7 @@ docker-compose up -d
 This will:
 - Build the Docker image
 - Start the Dreamcatcher service on port `8080`
+- Start a MongoDB database container for storing muted notifications
 
 ### Step 4: Configure UniFi Alarm Manager
 
@@ -94,6 +98,8 @@ That's it! Your network alarms will now be forwarded to Telegram.
 
 - `/start` - Start receiving notifications
 - `/stop` - Stop receiving notifications
+- `/mute` - Mute a specific notification (reply to a notification message to mute it)
+- `/clear` - Clear all muted notifications and reset the mute list
 
 ---
 
@@ -106,20 +112,26 @@ UniFi Dream Machine Pro
         ↓
    Dreamcatcher API (FastAPI)
         ↓
-   Telegram Bot
+   Telegram Bot ←→ MongoDB Database
         ↓
    Your Telegram Chat
 ```
 
-Dreamcatcher runs two parallel services:
+Dreamcatcher runs multiple services:
 1. **FastAPI Server**: Receives webhooks from UDM on `/webhook`
 2. **Telegram Bot**: Listens for commands and sends notifications
+3. **MongoDB Database**: Stores muted notifications and optionally webhook payloads
+
+### Notification Muting
+
+You can mute specific notifications to prevent spam from recurring events. When you reply to a notification with `/mute`, that specific notification will be silenced, and you won't receive further alerts for the same event. Use `/clear` to reset all muted notifications when needed. This is particularly useful when you trust a device and its recurring activity, or when you want to reduce notification noise.
 
 ---
 
 ## 🐳 Docker Compose Services
 
 - **backend**: The Dreamcatcher FastAPI application (port 8080)
+- **mongodb**: MongoDB database for storing muted notifications and webhook data (port 27017)
 
 ---
 
@@ -145,9 +157,12 @@ dreamcatcher/
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token from BotFather | ✅ Yes |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token from BotFather | ✅ Yes | - |
+| `STORE_WEBHOOKS_TO_DATABASE` | Store complete webhook payloads in database (for development/debugging) | ❌ No | `false` |
+
+**Recommendation**: Keep `STORE_WEBHOOKS_TO_DATABASE` set to `false` in production. Only enable it for development purposes or if you want to inspect the raw data your Dream Machine router sends.
 
 ---
 

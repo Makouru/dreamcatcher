@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request
 import os
 import asyncio
 
-from utilities.logger import log
 from utilities.bot import TelegramBot
 from utilities.db import Database
 
