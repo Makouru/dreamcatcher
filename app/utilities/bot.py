@@ -1,7 +1,6 @@
-import os
-from utilities.logger import log
 from telegram import ForceReply, Update, Bot
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+import os
 
 class TelegramBot():
 

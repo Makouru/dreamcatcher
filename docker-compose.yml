@@ -1,8 +1,8 @@
 services:
-  backend:
+  dreamcatcher:
     build: .
     image: dreamcatcher:latest
-    container_name: dreamcatcher-backend
+    container_name: dreamcatcher
     ports:
       - "8080:80"
     env_file:
