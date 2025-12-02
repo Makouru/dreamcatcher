@@ -8,3 +8,15 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    depends_on:
+      - database
+
+  database:
+    image: mongo:latest
+    container_name: dreamcatcher-database
+    restart: unless-stopped
+    volumes:
+      - dreamcatcher-mongodb-data:/data/db
+
+volumes:
+  dreamcatcher-mongodb-data:
