@@ -15,11 +15,8 @@ services:
     image: mongo:latest
     container_name: dreamcatcher-database
     restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - dreamcatcher-db-data:/data/db
+      - dreamcatcher-mongodb-data:/data/db
 
 volumes:
-  dreamcatcher-db-data:
+  dreamcatcher-mongodb-data:
