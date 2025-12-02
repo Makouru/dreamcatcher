@@ -184,11 +184,44 @@ When an alarm triggers, UDM sends a POST request to `/webhook` with JSON data:
 
 ```json
 {
-  "message": "Intrusion detected on device XX:XX:XX:XX:XX:XX"
+  "app": "network",
+  "customContent": null,
+  "deviceEventClassId": "400",
+  "message": "Device Name connected to WiFi Network on Access Point Name. Connection Info: Ch. 100 (5 GHz, 80 MHz), -81 dBm. IP: 10.x.x.x",
+  "name": "WiFi Client Connected",
+  "parameters": {
+    "UNIFIcategory": "Monitoring",
+    "UNIFIsubCategory": "WiFi",
+    "UNIFIhost": "Dream Machine",
+    "UNIFIconnectedToDeviceName": "Access Point Name",
+    "UNIFIconnectedToDeviceIp": "192.168.x.x",
+    "UNIFIconnectedToDeviceMac": "xx:xx:xx:xx:xx:xx",
+    "UNIFIconnectedToDeviceModel": "U6-Lite",
+    "UNIFIconnectedToDeviceVersion": "6.7.17",
+    "UNIFIclientAlias": "Device Name",
+    "UNIFIclientHostname": "hostname",
+    "UNIFIclientIp": "10.x.x.x",
+    "UNIFIclientMac": "xx:xx:xx:xx:xx:xx",
+    "UNIFIwifiChannel": "100",
+    "UNIFIwifiChannelWidth": "80",
+    "UNIFIwifiName": "WiFi Network",
+    "UNIFIwifiBand": "na",
+    "UNIFIauthMethod": "wpapsk",
+    "UNIFIWiFiRssi": "-81",
+    "UNIFInetworkName": "LAN",
+    "UNIFInetworkSubnet": "10.x.x.x/24",
+    "UNIFInetworkVlan": "10",
+    "UNIFIutcTime": "2025-12-02T19:31:59.847Z"
+  },
+  "severity": 1,
+  "version": "9.5.21",
+  "alarm_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
 ```
 
-**Note**: The actual webhook payload from UniFi is much more complex and contains additional metadata, timestamps, device information, and other technical details. However, **Dreamcatcher focuses on simplicity and robustness** by extracting only the essential information (the message itself) and forwarding it to Telegram. This approach prevents information overload and keeps notifications clean and actionable for the end user.
+**Note**: The actual webhook payload from UniFi contains extensive metadata, timestamps, device information, and technical details as shown above. However, **Dreamcatcher focuses on simplicity and robustness** by extracting only the essential information (the `message` field) and forwarding it to Telegram. This approach prevents information overload and keeps notifications clean and actionable for the end user.
+
+If you enable `STORE_WEBHOOKS_TO_DATABASE=true` in your `.env` file, the complete payload will be stored in MongoDB for development or debugging purposes.
 
 ---
 
