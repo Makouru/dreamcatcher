@@ -1,6 +1,4 @@
-import hashlib
 import re
-import os
 import motor.motor_asyncio
 
 from utilities.logger import log
@@ -34,30 +32,24 @@ class Database():
             log.error(f"Failed to save webhook: {str(e)}")
             return None
         
-    def extract_first_sentence(self, message: str):
-        match = re.search(r'(?<!\d)\.(?=\s|$)|[!?](?=\s|$)', message)
+    def extract_first_sentence(self, message: str) -> str:
+        match = re.search(r'[!?]|\.(?!\d)(?=\s+[A-Z]|$)', message)
         if match:
             return message[:match.end()].strip()
         return message.strip()
-    
-    def get_sha256_hexdigest(self, text: str):
-        return hashlib.sha256(text.encode("utf-8")).hexdigest()
-    
-    def get_notification_fingerprint(self, notification: str):
-        return self.get_sha256_hexdigest(self.extract_first_sentence(notification))
 
     async def save_message_to_muted(self, message: str):
         try:
             message_already_muted = await self.message_is_muted(message)
             if message_already_muted: return -1
-            result = await self.muted.insert_one({"fingerprint": str(self.get_notification_fingerprint(message))})
+            result = await self.muted.insert_one({"fingerprint": str(self.extract_first_sentence(message))})
             return result.inserted_id
         except Exception as e:
             log.error(f"Failed to save new muted message: {str(e)}")
             return None 
         
     async def message_is_muted(self, message: str):
-        result = await self.muted.find_one({"fingerprint": str(self.get_notification_fingerprint(message))})
+        result = await self.muted.find_one({"fingerprint": str(self.extract_first_sentence(message))})
         return result is not None
     
     async def clear_muted_collection(self):
